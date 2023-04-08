@@ -15,7 +15,7 @@ exports.findAll = async(req, res) => {
             });
         }
         catch(err){
-            console.err("error while fetching the user for username: ", userNameReq);
+            console.log("error while fetching the user for username: ", userNameReq);
             res.status(500).send({
                 message:"Some internal error occured"
             })
@@ -29,7 +29,7 @@ exports.findAll = async(req, res) => {
             })
         }
         catch(err){
-            console.err(`error while fetching the user, userType [${userTypeReq}] and [${userStatusReq}]`)
+            console.log(`error while fetching the user, userType [${userTypeReq}] and [${userStatusReq}]`)
         res.status(500).send({
             message:"Some internal error occured"
         })
@@ -42,7 +42,7 @@ exports.findAll = async(req, res) => {
             })
         }
         catch(err){
-            console.err(`error while fetching the user, userType [${userTypeReq}]`)
+            console.log(`error while fetching the user, userType [${userTypeReq}]`)
         res.status(500).send({
             message:"Some internal error occured"
         })
@@ -55,7 +55,7 @@ exports.findAll = async(req, res) => {
             })
         }
         catch(err){
-            console.err(`error while fetching the user, userStatus [${userStatusReq}]`)
+            console.log(`error while fetching the user, userStatus [${userStatusReq}]`)
         res.status(500).send({
             message:"Some internal error occured"
         })
@@ -66,12 +66,12 @@ exports.findAll = async(req, res) => {
             users = await User.find();
         }
         catch(err){
-            console.err(`error while fetching the users`)
+            console.log(`error while fetching the users`)
         res.status(500).send({
             message:"Some internal error occured"
         })
     }}
-return res.status(200).send(objectConverter.userResponse(users));
+return res.status(200).send(users);
 }
 
 exports.findById = async(req, res) => {

@@ -3,6 +3,7 @@ const User = require("../models/user.model");
 const Ticket = require("../models/ticket.model");
 const constants = require("../utils/constants");
 const objectConvertor = require("../utils/objectConverter");
+const sendEmail = require("../utils/NotificationClient");
 
 
 exports.createTicket = async(req, res) => {
@@ -47,6 +48,12 @@ exports.createTicket = async(req, res) => {
 
             engineer.ticketsAssigned.push(ticket._id);  // to assign the user
             await engineer.save();
+
+            /**
+             * Sending the notificattion to the assigned Engineer in asynchronous manner
+            */
+
+            sendEmail(ticket._id, "Ticket with id: " + ticket._id + " created", ticket.description, user.email + "," + engineer.email, user.email);
 
             res.status(201).send(ticket);
         }
@@ -99,7 +106,20 @@ exports.createTicket = async(req, res) => {
             ticket.status = req.body.status  != undefined ? req.body.status: ticket.status
             ticket.assignee = req.body.assignee != undefined ? req.body.assignee : ticket.assignee
             var updatedTicket = await ticket.save();
+            
+            const engineer = await User.findOne({
+                userId: ticket.assignee
     
+                
+            })
+    
+            const reporter = await User.findOne({
+                userId: ticket.reporter
+            });
+            
+            sendEmail(ticket._id, "Ticket with Id: " + ticket._id + " updated", ticket.description, 
+            savedUser.email + "," + engineer.email+"," + reporter.email, savedUser.email);
+
             res.status(200).send(updatedTicket);
         }else{
             console.log('Ticket was being updated by someone who has not created the ticket');
